@@ -6,99 +6,116 @@
 <title>OCTOPUS</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,600;9..144,900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,600;9..144,900&display=swap" rel="stylesheet">
 <style>
   :root{
     --void: #040202;
     --blood: #5c0713;
     --rust: #8a1220;
     --crimson: #ff2540;
+    --cyan: #37e0ff;
     --bone: #e9dfd9;
-    --dim: #6e5a58;
-    --hair: rgba(255, 37, 64, 0.16);
   }
 
   *{ margin:0; padding:0; box-sizing:border-box; }
-
   html, body{ height:100%; }
 
   body{
     background:var(--void);
     color:var(--bone);
-    font-family:'IBM Plex Mono', monospace;
+    font-family:'Fraunces', serif;
     overflow:hidden;
     position:relative;
+    cursor:none;
   }
 
-  :focus-visible{ outline:2px solid var(--crimson); outline-offset:4px; }
+  a{ cursor:none; }
 
+  /* ---------- drifting light ---------- */
   .blob{
     position:fixed;
     border-radius:50%;
     filter:blur(90px);
     mix-blend-mode:screen;
-    opacity:0.55;
     pointer-events:none;
   }
   .blob.a{
     width:70vmax; height:70vmax;
     top:-20%; left:-15%;
     background:radial-gradient(circle, var(--blood), transparent 70%);
+    opacity:0.55;
     animation:drift-a 34s ease-in-out infinite;
   }
   .blob.b{
     width:60vmax; height:60vmax;
     bottom:-25%; right:-10%;
     background:radial-gradient(circle, var(--rust), transparent 70%);
+    opacity:0.5;
     animation:drift-b 40s ease-in-out infinite;
   }
   .blob.c{
     width:45vmax; height:45vmax;
     top:35%; left:40%;
     background:radial-gradient(circle, var(--blood), transparent 70%);
-    opacity:0.35;
+    opacity:0.3;
     animation:drift-c 46s ease-in-out infinite;
   }
-
   @keyframes drift-a{
-    0%,100%{ transform:translate(0,0) scale(1); }
-    50%{ transform:translate(8%, 10%) scale(1.15); }
+    0%,100%{ transform:translate(0,0) rotate(0deg) scale(1); }
+    50%{ transform:translate(8%, 10%) rotate(12deg) scale(1.15); }
   }
   @keyframes drift-b{
-    0%,100%{ transform:translate(0,0) scale(1); }
-    50%{ transform:translate(-10%, -6%) scale(1.1); }
+    0%,100%{ transform:translate(0,0) rotate(0deg) scale(1); }
+    50%{ transform:translate(-10%, -6%) rotate(-10deg) scale(1.1); }
   }
   @keyframes drift-c{
     0%,100%{ transform:translate(-50%, -50%) scale(1); }
-    50%{ transform:translate(-45%, -55%) scale(1.2); }
-  }
-
-  .scanline{
-    position:fixed;
-    left:0; right:0;
-    height:120px;
-    background:linear-gradient(180deg, transparent, rgba(255,37,64,0.05), transparent);
-    animation:sweep 9s linear infinite;
-    pointer-events:none;
-  }
-  @keyframes sweep{
-    0%{ top:-120px; }
-    100%{ top:100%; }
+    50%{ transform:translate(-45%, -55%) scale(1.25); }
   }
 
   .grain{
-    position:fixed; inset:0;
+    position:fixed; inset:-10%;
     pointer-events:none;
-    opacity:0.05;
+    opacity:0.06;
     background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    animation:grain-shift 1.4s steps(4) infinite;
+  }
+  @keyframes grain-shift{
+    0%{ transform:translate(0,0); }
+    25%{ transform:translate(-2%,1%); }
+    50%{ transform:translate(1%,-2%); }
+    75%{ transform:translate(-1%,-1%); }
+    100%{ transform:translate(0,0); }
   }
 
   .vignette{
     position:fixed; inset:0;
     pointer-events:none;
-    background:radial-gradient(ellipse at center, transparent 35%, rgba(0,0,0,0.85) 100%);
+    background:radial-gradient(ellipse at center, transparent 35%, rgba(0,0,0,0.88) 100%);
   }
 
+  /* ---------- embers ---------- */
+  .ember{
+    position:fixed;
+    bottom:-10px;
+    width:var(--size);
+    height:var(--size);
+    border-radius:50%;
+    background:var(--crimson);
+    box-shadow:0 0 6px var(--crimson);
+    opacity:0;
+    pointer-events:none;
+    animation:rise var(--dur) linear infinite;
+    animation-delay:var(--delay);
+  }
+  @keyframes rise{
+    0%{ transform:translate(0,0); opacity:0; }
+    8%{ opacity:0.85; }
+    90%{ opacity:0.4; }
+    100%{ transform:translate(var(--drift), -110vh); opacity:0; }
+  }
+
+  /* ---------- wordmark ---------- */
   main{
     position:relative;
     z-index:5;
@@ -107,112 +124,109 @@
     flex-direction:column;
     align-items:center;
     justify-content:center;
-    text-align:center;
     padding:24px;
   }
 
-  .kicker{
-    font-size:12px;
-    letter-spacing:0.35em;
-    color:var(--dim);
-    text-transform:lowercase;
+  .aura{
+    position:absolute;
+    width:520px; height:280px;
+    background:radial-gradient(ellipse, rgba(255,37,64,0.22), transparent 70%);
+    filter:blur(30px);
+    animation:breathe 5.2s ease-in-out infinite;
+    pointer-events:none;
+  }
+  @keyframes breathe{
+    0%,100%{ opacity:0.5; transform:scale(1); }
+    50%{ opacity:0.9; transform:scale(1.12); }
   }
 
-  .mark{
+  h1.mark{
     position:relative;
-    font-family:'Fraunces', serif;
+    display:flex;
     font-weight:600;
     font-size:clamp(64px, 13vw, 160px);
     letter-spacing:0.02em;
-    color:var(--bone);
-    margin:18px 0 10px;
     line-height:1;
-    text-shadow:0 0 50px rgba(255,37,64,0.25);
+    color:var(--bone);
+    text-shadow:0 0 50px rgba(255,37,64,0.28);
   }
-  .mark::before,
-  .mark::after{
-    content:'OCTOPUS';
+  h1.mark .glyph{
+    position:relative;
+    display:inline-block;
+    animation:flicker 6s infinite;
+  }
+  @keyframes flicker{
+    0%, 92%, 96%, 100%{ opacity:1; text-shadow:0 0 50px rgba(255,37,64,0.28); }
+    93%{ opacity:0.35; text-shadow:none; }
+    94%{ opacity:1; }
+    97%{ opacity:0.5; text-shadow:none; }
+    98%{ opacity:1; }
+  }
+
+  .rgb-split{
     position:absolute;
-    left:0; top:0;
-    width:100%;
+    top:0; left:0;
+    display:flex;
     opacity:0;
   }
-  .mark::before{ color:#3fdcff; transform:translate(0,0); }
-  .mark::after{ color:var(--crimson); transform:translate(0,0); }
-
+  .rgb-split.cy{ color:var(--cyan); animation:glitch-cut 8s infinite; }
+  .rgb-split.cr{ color:var(--crimson); animation:glitch-cut 8s infinite; animation-delay:0.06s; }
   @keyframes glitch-cut{
-    0%, 92%, 100%{ opacity:0; transform:translate(0,0); clip-path:inset(0 0 0 0); }
-    93%{ opacity:0.7; transform:translate(-3px,1px); clip-path:inset(10% 0 60% 0); }
-    95%{ opacity:0.7; transform:translate(3px,-1px); clip-path:inset(55% 0 15% 0); }
-    97%{ opacity:0.5; transform:translate(-2px,0); clip-path:inset(30% 0 40% 0); }
+    0%, 93%, 100%{ opacity:0; transform:translate(0,0); clip-path:inset(0 0 0 0); }
+    94%{ opacity:0.7; transform:translate(-4px,1px); clip-path:inset(10% 0 60% 0); }
+    96%{ opacity:0.7; transform:translate(4px,-1px); clip-path:inset(55% 0 15% 0); }
+    98%{ opacity:0.4; transform:translate(-2px,0); clip-path:inset(30% 0 40% 0); }
   }
-  .mark::before{ animation:glitch-cut 7s infinite; }
-  .mark::after{ animation:glitch-cut 7s infinite; animation-delay:0.05s; }
 
-  .tagline{
-    max-width:420px;
+  a.enter{
+    margin-top:44px;
+    font-family:'IBM Plex Mono', monospace;
     font-size:13px;
-    line-height:1.9;
-    color:var(--dim);
-    margin-bottom:46px;
-  }
-
-  nav.links{
-    display:flex;
-    align-items:center;
-  }
-  nav.links a{
+    letter-spacing:0.12em;
     color:var(--bone);
     text-decoration:none;
-    font-size:13px;
-    letter-spacing:0.08em;
-    padding:0 22px;
-    transition:color 0.3s ease, text-shadow 0.3s ease;
+    padding:14px 34px;
+    border:1px solid rgba(255,37,64,0.35);
+    border-radius:2px;
+    position:relative;
+    animation:pulse-border 4s ease-in-out infinite;
+    transition:color 0.3s ease, background 0.3s ease;
   }
-  nav.links a:first-child{ padding-left:0; }
-  nav.links a:last-child{ padding-right:0; }
-  nav.links span{
-    width:1px; height:14px;
-    background:var(--hair);
-  }
-  nav.links a:hover{
-    color:var(--crimson);
-    text-shadow:0 0 16px rgba(255,37,64,0.6);
-  }
-
-  .status{
-    position:fixed;
-    bottom:28px;
-    left:0; right:0;
-    display:flex;
-    justify-content:center;
-    gap:8px;
-    font-size:11px;
-    letter-spacing:0.1em;
-    color:var(--dim);
-    z-index:5;
-  }
-  .status .dot{
-    width:5px; height:5px;
-    border-radius:50%;
+  a.enter:hover{
+    color:var(--void);
     background:var(--crimson);
-    box-shadow:0 0 8px var(--crimson);
-    align-self:center;
-    animation:blink 3.6s ease-in-out infinite;
   }
-  @keyframes blink{
-    0%,100%{ opacity:0.4; }
-    50%{ opacity:1; }
+  @keyframes pulse-border{
+    0%,100%{ box-shadow:0 0 0 rgba(255,37,64,0); }
+    50%{ box-shadow:0 0 24px rgba(255,37,64,0.35); }
   }
 
-  @media (max-width:520px){
-    nav.links{ flex-direction:column; gap:18px; }
-    nav.links a{ padding:0; }
-    nav.links span{ display:none; }
+  /* ---------- custom cursor ---------- */
+  #cursor{
+    position:fixed;
+    top:0; left:0;
+    width:22px; height:22px;
+    pointer-events:none;
+    z-index:999;
+    transform:translate(-50%,-50%);
+    mix-blend-mode:screen;
+  }
+  #cursor span{
+    position:absolute;
+    inset:0;
+  }
+  #cursor .c1{ background:var(--crimson); clip-path:polygon(0 0, 100% 0, 100% 45%, 0 45%); }
+  #cursor .c2{ background:var(--cyan); clip-path:polygon(0 55%, 100% 55%, 100% 100%, 0 100%); }
+  #cursor .c3{ background:var(--bone); clip-path:polygon(35% 30%, 65% 30%, 65% 70%, 35% 70%); }
+
+  @media (max-width:640px){
+    body{ cursor:auto; }
+    a{ cursor:pointer; }
+    #cursor{ display:none; }
   }
 
   @media (prefers-reduced-motion: reduce){
-    .blob, .scanline, .mark::before, .mark::after, .status .dot{
+    .blob, .grain, .ember, h1.mark .glyph, .rgb-split, .aura, a.enter{
       animation:none;
     }
   }
@@ -223,21 +237,65 @@
 <div class="blob a"></div>
 <div class="blob b"></div>
 <div class="blob c"></div>
-<div class="scanline"></div>
 <div class="grain"></div>
 <div class="vignette"></div>
+<div id="embers"></div>
 
 <main>
-  <h1 class="mark">OCTOPUS</h1>
-
-  <nav class="links">
-    <a href="https://t.me/octopus_channel" target="_blank" rel="noopener">канал</a>
-    <span></span>
-    <a href="https://t.me/octopus_chat" target="_blank" rel="noopener">чат</a>
-    <span></span>
-    <a href="https://t.me/octopus_bot" target="_blank" rel="noopener">бот</a>
-  </nav>
+  <div class="aura"></div>
+  <h1 class="mark" id="mark">
+    <span class="rgb-split cy" aria-hidden="true">OCTOPUS</span>
+    <span class="rgb-split cr" aria-hidden="true">OCTOPUS</span>
+    OCTOPUS
+  </h1>
+  <a class="enter" href="https://t.me/octopus_channel" target="_blank" rel="noopener">войти</a>
 </main>
+
+<div id="cursor"><span class="c1"></span><span class="c2"></span><span class="c3"></span></div>
+
+<script>
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const wordmark = document.querySelector('h1.mark');
+  const letters = 'OCTOPUS'.split('');
+  wordmark.lastChild.remove();
+  letters.forEach((letter, i) => {
+    const glyph = document.createElement('span');
+    glyph.className = 'glyph';
+    glyph.textContent = letter;
+    glyph.style.animationDelay = `${i * 0.7}s`;
+    wordmark.appendChild(glyph);
+  });
+
+  if (!reduceMotion) {
+    const emberField = document.getElementById('embers');
+    for (let i = 0; i < 16; i++) {
+      const ember = document.createElement('div');
+      ember.className = 'ember';
+      ember.style.setProperty('--size', `${2 + Math.random() * 3}px`);
+      ember.style.setProperty('--dur', `${9 + Math.random() * 10}s`);
+      ember.style.setProperty('--delay', `${Math.random() * 12}s`);
+      ember.style.setProperty('--drift', `${(Math.random() - 0.5) * 160}px`);
+      ember.style.left = `${Math.random() * 100}vw`;
+      emberField.appendChild(ember);
+    }
+
+    const cursor = document.getElementById('cursor');
+    window.addEventListener('mousemove', (e) => {
+      cursor.style.left = `${e.clientX}px`;
+      cursor.style.top = `${e.clientY}px`;
+    });
+
+    const shards = cursor.querySelectorAll('span');
+    setInterval(() => {
+      const angle = Math.floor(Math.random() * 4) * 90;
+      const scale = 0.8 + Math.random() * 0.6;
+      cursor.style.transform = `translate(-50%,-50%) rotate(${angle}deg) scale(${scale})`;
+      shards[0].style.clipPath = `polygon(0 0, 100% 0, 100% ${30 + Math.random() * 30}%, 0 ${30 + Math.random() * 30}%)`;
+      shards[1].style.clipPath = `polygon(0 ${55 + Math.random() * 20}%, 100% ${55 + Math.random() * 20}%, 100% 100%, 0 100%)`;
+    }, 260);
+  }
+</script>
 
 </body>
 </html>
