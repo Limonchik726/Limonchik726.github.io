@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OCTOPUS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,600;9..144,900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --void: #040202;
+    --blood: #5c0713;
+    --rust: #8a1220;
+    --crimson: #ff2540;
+    --bone: #e9dfd9;
+    --dim: #6e5a58;
+    --hair: rgba(255, 37, 64, 0.16);
+  }
+
+  *{ margin:0; padding:0; box-sizing:border-box; }
+
+  html, body{ height:100%; }
+
+  body{
+    background:var(--void);
+    color:var(--bone);
+    font-family:'IBM Plex Mono', monospace;
+    overflow:hidden;
+    position:relative;
+  }
+
+  :focus-visible{ outline:2px solid var(--crimson); outline-offset:4px; }
+
+  .blob{
+    position:fixed;
+    border-radius:50%;
+    filter:blur(90px);
+    mix-blend-mode:screen;
+    opacity:0.55;
+    pointer-events:none;
+  }
+  .blob.a{
+    width:70vmax; height:70vmax;
+    top:-20%; left:-15%;
+    background:radial-gradient(circle, var(--blood), transparent 70%);
+    animation:drift-a 34s ease-in-out infinite;
+  }
+  .blob.b{
+    width:60vmax; height:60vmax;
+    bottom:-25%; right:-10%;
+    background:radial-gradient(circle, var(--rust), transparent 70%);
+    animation:drift-b 40s ease-in-out infinite;
+  }
+  .blob.c{
+    width:45vmax; height:45vmax;
+    top:35%; left:40%;
+    background:radial-gradient(circle, var(--blood), transparent 70%);
+    opacity:0.35;
+    animation:drift-c 46s ease-in-out infinite;
+  }
+
+  @keyframes drift-a{
+    0%,100%{ transform:translate(0,0) scale(1); }
+    50%{ transform:translate(8%, 10%) scale(1.15); }
+  }
+  @keyframes drift-b{
+    0%,100%{ transform:translate(0,0) scale(1); }
+    50%{ transform:translate(-10%, -6%) scale(1.1); }
+  }
+  @keyframes drift-c{
+    0%,100%{ transform:translate(-50%, -50%) scale(1); }
+    50%{ transform:translate(-45%, -55%) scale(1.2); }
+  }
+
+  .scanline{
+    position:fixed;
+    left:0; right:0;
+    height:120px;
+    background:linear-gradient(180deg, transparent, rgba(255,37,64,0.05), transparent);
+    animation:sweep 9s linear infinite;
+    pointer-events:none;
+  }
+  @keyframes sweep{
+    0%{ top:-120px; }
+    100%{ top:100%; }
+  }
+
+  .grain{
+    position:fixed; inset:0;
+    pointer-events:none;
+    opacity:0.05;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  .vignette{
+    position:fixed; inset:0;
+    pointer-events:none;
+    background:radial-gradient(ellipse at center, transparent 35%, rgba(0,0,0,0.85) 100%);
+  }
+
+  main{
+    position:relative;
+    z-index:5;
+    height:100svh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:24px;
+  }
+
+  .kicker{
+    font-size:12px;
+    letter-spacing:0.35em;
+    color:var(--dim);
+    text-transform:lowercase;
+  }
+
+  .mark{
+    position:relative;
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:clamp(64px, 13vw, 160px);
+    letter-spacing:0.02em;
+    color:var(--bone);
+    margin:18px 0 10px;
+    line-height:1;
+    text-shadow:0 0 50px rgba(255,37,64,0.25);
+  }
+  .mark::before,
+  .mark::after{
+    content:'OCTOPUS';
+    position:absolute;
+    left:0; top:0;
+    width:100%;
+    opacity:0;
+  }
+  .mark::before{ color:#3fdcff; transform:translate(0,0); }
+  .mark::after{ color:var(--crimson); transform:translate(0,0); }
+
+  @keyframes glitch-cut{
+    0%, 92%, 100%{ opacity:0; transform:translate(0,0); clip-path:inset(0 0 0 0); }
+    93%{ opacity:0.7; transform:translate(-3px,1px); clip-path:inset(10% 0 60% 0); }
+    95%{ opacity:0.7; transform:translate(3px,-1px); clip-path:inset(55% 0 15% 0); }
+    97%{ opacity:0.5; transform:translate(-2px,0); clip-path:inset(30% 0 40% 0); }
+  }
+  .mark::before{ animation:glitch-cut 7s infinite; }
+  .mark::after{ animation:glitch-cut 7s infinite; animation-delay:0.05s; }
+
+  .tagline{
+    max-width:420px;
+    font-size:13px;
+    line-height:1.9;
+    color:var(--dim);
+    margin-bottom:46px;
+  }
+
+  nav.links{
+    display:flex;
+    align-items:center;
+  }
+  nav.links a{
+    color:var(--bone);
+    text-decoration:none;
+    font-size:13px;
+    letter-spacing:0.08em;
+    padding:0 22px;
+    transition:color 0.3s ease, text-shadow 0.3s ease;
+  }
+  nav.links a:first-child{ padding-left:0; }
+  nav.links a:last-child{ padding-right:0; }
+  nav.links span{
+    width:1px; height:14px;
+    background:var(--hair);
+  }
+  nav.links a:hover{
+    color:var(--crimson);
+    text-shadow:0 0 16px rgba(255,37,64,0.6);
+  }
+
+  .status{
+    position:fixed;
+    bottom:28px;
+    left:0; right:0;
+    display:flex;
+    justify-content:center;
+    gap:8px;
+    font-size:11px;
+    letter-spacing:0.1em;
+    color:var(--dim);
+    z-index:5;
+  }
+  .status .dot{
+    width:5px; height:5px;
+    border-radius:50%;
+    background:var(--crimson);
+    box-shadow:0 0 8px var(--crimson);
+    align-self:center;
+    animation:blink 3.6s ease-in-out infinite;
+  }
+  @keyframes blink{
+    0%,100%{ opacity:0.4; }
+    50%{ opacity:1; }
+  }
+
+  @media (max-width:520px){
+    nav.links{ flex-direction:column; gap:18px; }
+    nav.links a{ padding:0; }
+    nav.links span{ display:none; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .blob, .scanline, .mark::before, .mark::after, .status .dot{
+      animation:none;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="blob a"></div>
+<div class="blob b"></div>
+<div class="blob c"></div>
+<div class="scanline"></div>
+<div class="grain"></div>
+<div class="vignette"></div>
+
+<main>
+  <div class="kicker">восемь рук, один разум</div>
+  <h1 class="mark">OCTOPUS</h1>
+  <p class="tagline">Сеть, которая не объявляет о себе. Она просто уже везде, где ты смотришь.</p>
+
+  <nav class="links">
+    <a href="https://t.me/octopus_channel" target="_blank" rel="noopener">канал</a>
+    <span></span>
+    <a href="https://t.me/octopus_chat" target="_blank" rel="noopener">чат</a>
+    <span></span>
+    <a href="https://t.me/octopus_bot" target="_blank" rel="noopener">бот</a>
+  </nav>
+</main>
+
+<div class="status"><span class="dot"></span>сеть активна</div>
+
+</body>
+</html>
