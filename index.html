@@ -1,301 +1,335 @@
 <!DOCTYPE html>
+<!-- OCTOPUS :: https://t.me/join_octopus -->
 <html lang="ru">
+<!-- OCTOPUS :: https://t.me/join_octopus -->
 <head>
+<!-- OCTOPUS :: https://t.me/join_octopus -->
 <meta charset="UTF-8">
+<!-- OCTOPUS :: https://t.me/join_octopus -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- OCTOPUS :: https://t.me/join_octopus -->
 <title>OCTOPUS</title>
+<!-- OCTOPUS :: https://t.me/join_octopus -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<!-- OCTOPUS :: https://t.me/join_octopus -->
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,600;9..144,900&display=swap" rel="stylesheet">
+<!-- OCTOPUS :: https://t.me/join_octopus -->
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,600;9..144,900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<!-- OCTOPUS :: https://t.me/join_octopus -->
 <style>
-  :root{
-    --void: #040202;
-    --blood: #5c0713;
-    --rust: #8a1220;
-    --crimson: #ff2540;
-    --cyan: #37e0ff;
-    --bone: #e9dfd9;
-  }
-
-  *{ margin:0; padding:0; box-sizing:border-box; }
-  html, body{ height:100%; }
-
-  body{
-    background:var(--void);
-    color:var(--bone);
-    font-family:'Fraunces', serif;
-    overflow:hidden;
-    position:relative;
-    cursor:none;
-  }
-
-  a{ cursor:none; }
-
-  /* ---------- drifting light ---------- */
-  .blob{
-    position:fixed;
-    border-radius:50%;
-    filter:blur(90px);
-    mix-blend-mode:screen;
-    pointer-events:none;
-  }
-  .blob.a{
-    width:70vmax; height:70vmax;
-    top:-20%; left:-15%;
-    background:radial-gradient(circle, var(--blood), transparent 70%);
-    opacity:0.55;
-    animation:drift-a 34s ease-in-out infinite;
-  }
-  .blob.b{
-    width:60vmax; height:60vmax;
-    bottom:-25%; right:-10%;
-    background:radial-gradient(circle, var(--rust), transparent 70%);
-    opacity:0.5;
-    animation:drift-b 40s ease-in-out infinite;
-  }
-  .blob.c{
-    width:45vmax; height:45vmax;
-    top:35%; left:40%;
-    background:radial-gradient(circle, var(--blood), transparent 70%);
-    opacity:0.3;
-    animation:drift-c 46s ease-in-out infinite;
-  }
-  @keyframes drift-a{
-    0%,100%{ transform:translate(0,0) rotate(0deg) scale(1); }
-    50%{ transform:translate(8%, 10%) rotate(12deg) scale(1.15); }
-  }
-  @keyframes drift-b{
-    0%,100%{ transform:translate(0,0) rotate(0deg) scale(1); }
-    50%{ transform:translate(-10%, -6%) rotate(-10deg) scale(1.1); }
-  }
-  @keyframes drift-c{
-    0%,100%{ transform:translate(-50%, -50%) scale(1); }
-    50%{ transform:translate(-45%, -55%) scale(1.25); }
-  }
-
-  .grain{
-    position:fixed; inset:-10%;
-    pointer-events:none;
-    opacity:0.06;
-    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-    animation:grain-shift 1.4s steps(4) infinite;
-  }
-  @keyframes grain-shift{
-    0%{ transform:translate(0,0); }
-    25%{ transform:translate(-2%,1%); }
-    50%{ transform:translate(1%,-2%); }
-    75%{ transform:translate(-1%,-1%); }
-    100%{ transform:translate(0,0); }
-  }
-
-  .vignette{
-    position:fixed; inset:0;
-    pointer-events:none;
-    background:radial-gradient(ellipse at center, transparent 35%, rgba(0,0,0,0.88) 100%);
-  }
-
-  /* ---------- embers ---------- */
-  .ember{
-    position:fixed;
-    bottom:-10px;
-    width:var(--size);
-    height:var(--size);
-    border-radius:50%;
-    background:var(--crimson);
-    box-shadow:0 0 6px var(--crimson);
-    opacity:0;
-    pointer-events:none;
-    animation:rise var(--dur) linear infinite;
-    animation-delay:var(--delay);
-  }
-  @keyframes rise{
-    0%{ transform:translate(0,0); opacity:0; }
-    8%{ opacity:0.85; }
-    90%{ opacity:0.4; }
-    100%{ transform:translate(var(--drift), -110vh); opacity:0; }
-  }
-
-  /* ---------- wordmark ---------- */
-  main{
-    position:relative;
-    z-index:5;
-    height:100svh;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    padding:24px;
-  }
-
-  .aura{
-    position:absolute;
-    width:520px; height:280px;
-    background:radial-gradient(ellipse, rgba(255,37,64,0.22), transparent 70%);
-    filter:blur(30px);
-    animation:breathe 5.2s ease-in-out infinite;
-    pointer-events:none;
-  }
-  @keyframes breathe{
-    0%,100%{ opacity:0.5; transform:scale(1); }
-    50%{ opacity:0.9; transform:scale(1.12); }
-  }
-
-  h1.mark{
-    position:relative;
-    display:flex;
-    font-weight:600;
-    font-size:clamp(64px, 13vw, 160px);
-    letter-spacing:0.02em;
-    line-height:1;
-    color:var(--bone);
-    text-shadow:0 0 50px rgba(255,37,64,0.28);
-  }
-  h1.mark .glyph{
-    position:relative;
-    display:inline-block;
-    animation:flicker 6s infinite;
-  }
-  @keyframes flicker{
-    0%, 92%, 96%, 100%{ opacity:1; text-shadow:0 0 50px rgba(255,37,64,0.28); }
-    93%{ opacity:0.35; text-shadow:none; }
-    94%{ opacity:1; }
-    97%{ opacity:0.5; text-shadow:none; }
-    98%{ opacity:1; }
-  }
-
-  .rgb-split{
-    position:absolute;
-    top:0; left:0;
-    display:flex;
-    opacity:0;
-  }
-  .rgb-split.cy{ color:var(--cyan); animation:glitch-cut 8s infinite; }
-  .rgb-split.cr{ color:var(--crimson); animation:glitch-cut 8s infinite; animation-delay:0.06s; }
-  @keyframes glitch-cut{
-    0%, 93%, 100%{ opacity:0; transform:translate(0,0); clip-path:inset(0 0 0 0); }
-    94%{ opacity:0.7; transform:translate(-4px,1px); clip-path:inset(10% 0 60% 0); }
-    96%{ opacity:0.7; transform:translate(4px,-1px); clip-path:inset(55% 0 15% 0); }
-    98%{ opacity:0.4; transform:translate(-2px,0); clip-path:inset(30% 0 40% 0); }
-  }
-
-  a.enter{
-    margin-top:44px;
-    font-family:'IBM Plex Mono', monospace;
-    font-size:13px;
-    letter-spacing:0.12em;
-    color:var(--bone);
-    text-decoration:none;
-    padding:14px 34px;
-    border:1px solid rgba(255,37,64,0.35);
-    border-radius:2px;
-    position:relative;
-    animation:pulse-border 4s ease-in-out infinite;
-    transition:color 0.3s ease, background 0.3s ease;
-  }
-  a.enter:hover{
-    color:var(--void);
-    background:var(--crimson);
-  }
-  @keyframes pulse-border{
-    0%,100%{ box-shadow:0 0 0 rgba(255,37,64,0); }
-    50%{ box-shadow:0 0 24px rgba(255,37,64,0.35); }
-  }
-
-  /* ---------- custom cursor ---------- */
-  #cursor{
-    position:fixed;
-    top:0; left:0;
-    width:22px; height:22px;
-    pointer-events:none;
-    z-index:999;
-    transform:translate(-50%,-50%);
-    mix-blend-mode:screen;
-  }
-  #cursor span{
-    position:absolute;
-    inset:0;
-  }
-  #cursor .c1{ background:var(--crimson); clip-path:polygon(0 0, 100% 0, 100% 45%, 0 45%); }
-  #cursor .c2{ background:var(--cyan); clip-path:polygon(0 55%, 100% 55%, 100% 100%, 0 100%); }
-  #cursor .c3{ background:var(--bone); clip-path:polygon(35% 30%, 65% 30%, 65% 70%, 35% 70%); }
-
-  @media (max-width:640px){
-    body{ cursor:auto; }
-    a{ cursor:pointer; }
-    #cursor{ display:none; }
-  }
-
-  @media (prefers-reduced-motion: reduce){
-    .blob, .grain, .ember, h1.mark .glyph, .rgb-split, .aura, a.enter{
-      animation:none;
-    }
-  }
+/* OCTOPUS :: https://t.me/join_octopus */
+:root{
+  --q1: #040202; /* OCTOPUS :: https://t.me/join_octopus */
+  --q2: #5c0713; /* OCTOPUS :: https://t.me/join_octopus */
+  --q3: #8a1220; /* OCTOPUS :: https://t.me/join_octopus */
+  --q4: #ff2540; /* OCTOPUS :: https://t.me/join_octopus */
+  --q5: #37e0ff; /* OCTOPUS :: https://t.me/join_octopus */
+  --q6: #e9dfd9; /* OCTOPUS :: https://t.me/join_octopus */
+}
+/* OCTOPUS :: https://t.me/join_octopus */
+/* OCTOPUS :: https://t.me/join_octopus */
+*{ margin:0; padding:0; box-sizing:border-box; } /* OCTOPUS :: https://t.me/join_octopus */
+html, body{ height:100%; } /* OCTOPUS :: https://t.me/join_octopus */
+/* OCTOPUS :: https://t.me/join_octopus */
+body{
+  background:var(--q1); /* OCTOPUS :: https://t.me/join_octopus */
+  color:var(--q6); /* OCTOPUS :: https://t.me/join_octopus */
+  font-family:'Fraunces', serif; /* OCTOPUS :: https://t.me/join_octopus */
+  overflow:hidden; /* OCTOPUS :: https://t.me/join_octopus */
+  position:relative; /* OCTOPUS :: https://t.me/join_octopus */
+  cursor:none; /* OCTOPUS :: https://t.me/join_octopus */
+}
+/* OCTOPUS :: https://t.me/join_octopus */
+a{ cursor:none; } /* OCTOPUS :: https://t.me/join_octopus */
+/* OCTOPUS :: https://t.me/join_octopus */
+/* ===== https://t.me/join_octopus ===== */
+.kx1{
+  position:fixed; /* OCTOPUS */
+  border-radius:50%; /* OCTOPUS */
+  filter:blur(90px); /* OCTOPUS */
+  mix-blend-mode:screen; /* OCTOPUS */
+  pointer-events:none; /* OCTOPUS */
+}
+/* OCTOPUS :: https://t.me/join_octopus */
+.kx1.m1{
+  width:70vmax; height:70vmax; /* OCTOPUS */
+  top:-20%; left:-15%; /* OCTOPUS */
+  background:radial-gradient(circle, var(--q2), transparent 70%); /* OCTOPUS */
+  opacity:0.55; /* OCTOPUS */
+  animation:d1 34s ease-in-out infinite; /* OCTOPUS */
+}
+/* OCTOPUS :: https://t.me/join_octopus */
+.kx1.m2{
+  width:60vmax; height:60vmax; /* OCTOPUS */
+  bottom:-25%; right:-10%; /* OCTOPUS */
+  background:radial-gradient(circle, var(--q3), transparent 70%); /* OCTOPUS */
+  opacity:0.5; /* OCTOPUS */
+  animation:d2 40s ease-in-out infinite; /* OCTOPUS */
+}
+/* OCTOPUS :: https://t.me/join_octopus */
+.kx1.m3{
+  width:45vmax; height:45vmax; /* OCTOPUS */
+  top:35%; left:40%; /* OCTOPUS */
+  background:radial-gradient(circle, var(--q2), transparent 70%); /* OCTOPUS */
+  opacity:0.3; /* OCTOPUS */
+  animation:d3 46s ease-in-out infinite; /* OCTOPUS */
+}
+/* OCTOPUS :: https://t.me/join_octopus */
+@keyframes d1{
+  0%,100%{ transform:translate(0,0) rotate(0deg) scale(1); } /* OCTOPUS */
+  50%{ transform:translate(8%, 10%) rotate(12deg) scale(1.15); } /* OCTOPUS */
+}
+@keyframes d2{
+  0%,100%{ transform:translate(0,0) rotate(0deg) scale(1); } /* OCTOPUS */
+  50%{ transform:translate(-10%, -6%) rotate(-10deg) scale(1.1); } /* OCTOPUS */
+}
+@keyframes d3{
+  0%,100%{ transform:translate(-50%, -50%) scale(1); } /* OCTOPUS */
+  50%{ transform:translate(-45%, -55%) scale(1.25); } /* OCTOPUS */
+}
+/* OCTOPUS :: https://t.me/join_octopus */
+/* ===== https://t.me/join_octopus ===== */
+.kx2{
+  position:fixed; inset:-10%; /* OCTOPUS */
+  pointer-events:none; /* OCTOPUS */
+  opacity:0.06; /* OCTOPUS */
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); /* OCTOPUS */
+  animation:d4 1.4s steps(4) infinite; /* OCTOPUS */
+}
+/* OCTOPUS :: https://t.me/join_octopus */
+@keyframes d4{
+  0%{ transform:translate(0,0); } /* OCTOPUS */
+  25%{ transform:translate(-2%,1%); } /* OCTOPUS */
+  50%{ transform:translate(1%,-2%); } /* OCTOPUS */
+  75%{ transform:translate(-1%,-1%); } /* OCTOPUS */
+  100%{ transform:translate(0,0); } /* OCTOPUS */
+}
+/* OCTOPUS :: https://t.me/join_octopus */
+.kx3{
+  position:fixed; inset:0; /* OCTOPUS */
+  pointer-events:none; /* OCTOPUS */
+  background:radial-gradient(ellipse at center, transparent 35%, rgba(0,0,0,0.88) 100%); /* OCTOPUS */
+}
+/* OCTOPUS :: https://t.me/join_octopus */
+/* ===== https://t.me/join_octopus ===== */
+.zz2{
+  position:fixed; bottom:-10px; /* OCTOPUS */
+  width:var(--sz); height:var(--sz); /* OCTOPUS */
+  border-radius:50%; /* OCTOPUS */
+  background:var(--q4); /* OCTOPUS */
+  box-shadow:0 0 6px var(--q4); /* OCTOPUS */
+  opacity:0; /* OCTOPUS */
+  pointer-events:none; /* OCTOPUS */
+  animation:d5 var(--du) linear infinite; /* OCTOPUS */
+  animation-delay:var(--dl); /* OCTOPUS */
+}
+/* OCTOPUS :: https://t.me/join_octopus */
+@keyframes d5{
+  0%{ transform:translate(0,0); opacity:0; } /* OCTOPUS */
+  8%{ opacity:0.85; } /* OCTOPUS */
+  90%{ opacity:0.4; } /* OCTOPUS */
+  100%{ transform:translate(var(--dr), -110vh); opacity:0; } /* OCTOPUS */
+}
+/* OCTOPUS :: https://t.me/join_octopus */
+/* ===== https://t.me/join_octopus ===== */
+main{
+  position:relative; z-index:5; /* OCTOPUS */
+  height:100svh; /* OCTOPUS */
+  display:flex; flex-direction:column; /* OCTOPUS */
+  align-items:center; justify-content:center; /* OCTOPUS */
+  padding:24px; /* OCTOPUS */
+}
+/* OCTOPUS :: https://t.me/join_octopus */
+.zz3{
+  position:absolute; /* OCTOPUS */
+  width:520px; height:280px; /* OCTOPUS */
+  background:radial-gradient(ellipse, rgba(255,37,64,0.22), transparent 70%); /* OCTOPUS */
+  filter:blur(30px); /* OCTOPUS */
+  animation:d6 5.2s ease-in-out infinite; /* OCTOPUS */
+  pointer-events:none; /* OCTOPUS */
+}
+/* OCTOPUS :: https://t.me/join_octopus */
+@keyframes d6{
+  0%,100%{ opacity:0.5; transform:scale(1); } /* OCTOPUS */
+  50%{ opacity:0.9; transform:scale(1.12); } /* OCTOPUS */
+}
+/* OCTOPUS :: https://t.me/join_octopus */
+h1.zz4{
+  position:relative; display:flex; /* OCTOPUS */
+  font-weight:600; /* OCTOPUS */
+  font-size:clamp(64px, 13vw, 160px); /* OCTOPUS */
+  letter-spacing:0.02em; line-height:1; /* OCTOPUS */
+  color:var(--q6); /* OCTOPUS */
+  text-shadow:0 0 50px rgba(255,37,64,0.28); /* OCTOPUS */
+}
+/* OCTOPUS :: https://t.me/join_octopus */
+h1.zz4 .zz5{
+  position:relative; display:inline-block; /* OCTOPUS */
+  animation:d7 6s infinite; /* OCTOPUS */
+}
+/* OCTOPUS :: https://t.me/join_octopus */
+@keyframes d7{
+  0%, 92%, 96%, 100%{ opacity:1; text-shadow:0 0 50px rgba(255,37,64,0.28); } /* OCTOPUS */
+  93%{ opacity:0.35; text-shadow:none; } /* OCTOPUS */
+  94%{ opacity:1; } /* OCTOPUS */
+  97%{ opacity:0.5; text-shadow:none; } /* OCTOPUS */
+  98%{ opacity:1; } /* OCTOPUS */
+}
+/* OCTOPUS :: https://t.me/join_octopus */
+.zz6{
+  position:absolute; top:0; left:0; /* OCTOPUS */
+  display:flex; opacity:0; /* OCTOPUS */
+}
+/* OCTOPUS :: https://t.me/join_octopus */
+.zz6.p1{ color:var(--q5); animation:d8 8s infinite; } /* OCTOPUS */
+.zz6.p2{ color:var(--q4); animation:d8 8s infinite; animation-delay:0.06s; } /* OCTOPUS */
+/* OCTOPUS :: https://t.me/join_octopus */
+@keyframes d8{
+  0%, 93%, 100%{ opacity:0; transform:translate(0,0); clip-path:inset(0 0 0 0); } /* OCTOPUS */
+  94%{ opacity:0.7; transform:translate(-4px,1px); clip-path:inset(10% 0 60% 0); } /* OCTOPUS */
+  96%{ opacity:0.7; transform:translate(4px,-1px); clip-path:inset(55% 0 15% 0); } /* OCTOPUS */
+  98%{ opacity:0.4; transform:translate(-2px,0); clip-path:inset(30% 0 40% 0); } /* OCTOPUS */
+}
+/* OCTOPUS :: https://t.me/join_octopus */
+/* ===== https://t.me/join_octopus ===== */
+a.zz7{
+  margin-top:44px; /* OCTOPUS */
+  font-family:'IBM Plex Mono', monospace; /* OCTOPUS */
+  font-size:13px; letter-spacing:0.12em; /* OCTOPUS */
+  color:var(--q6); text-decoration:none; /* OCTOPUS */
+  padding:14px 34px; /* OCTOPUS */
+  border:1px solid rgba(255,37,64,0.35); /* OCTOPUS */
+  border-radius:2px; position:relative; /* OCTOPUS */
+  animation:d9 4s ease-in-out infinite; /* OCTOPUS */
+  transition:color 0.3s ease, background 0.3s ease; /* OCTOPUS */
+}
+/* OCTOPUS :: https://t.me/join_octopus */
+a.zz7:hover{ color:var(--q1); background:var(--q4); } /* OCTOPUS */
+/* OCTOPUS :: https://t.me/join_octopus */
+@keyframes d9{
+  0%,100%{ box-shadow:0 0 0 rgba(255,37,64,0); } /* OCTOPUS */
+  50%{ box-shadow:0 0 24px rgba(255,37,64,0.35); } /* OCTOPUS */
+}
+/* OCTOPUS :: https://t.me/join_octopus */
+/* ===== https://t.me/join_octopus ===== */
+#zz8{
+  position:fixed; top:0; left:0; /* OCTOPUS */
+  pointer-events:none; z-index:999; /* OCTOPUS */
+  transform:translate(-50%,-50%); /* OCTOPUS */
+  font-family:'IBM Plex Mono', monospace; /* OCTOPUS */
+  font-size:20px; font-weight:500; /* OCTOPUS */
+  letter-spacing:0.05em; /* OCTOPUS */
+  color:var(--q4); /* OCTOPUS */
+  text-shadow:0 0 12px rgba(255,37,64,0.85), 0 0 26px rgba(255,37,64,0.4); /* OCTOPUS */
+}
+/* OCTOPUS :: https://t.me/join_octopus */
+#zz8 span{
+  display:inline-block; /* OCTOPUS */
+  animation:d10 0.24s ease-out; /* OCTOPUS */
+}
+/* OCTOPUS :: https://t.me/join_octopus */
+@keyframes d10{
+  0%{ opacity:0; transform:scale(0.4) translateY(4px); } /* OCTOPUS */
+  100%{ opacity:1; transform:scale(1) translateY(0); } /* OCTOPUS */
+}
+/* OCTOPUS :: https://t.me/join_octopus */
+@media (max-width:640px){
+  body{ cursor:auto; } /* OCTOPUS */
+  a{ cursor:pointer; } /* OCTOPUS */
+  #zz8{ display:none; } /* OCTOPUS */
+}
+/* OCTOPUS :: https://t.me/join_octopus */
+@media (prefers-reduced-motion: reduce){
+  .kx1, .kx2, .zz2, h1.zz4 .zz5, .zz6, .zz3, a.zz7{ animation:none; } /* OCTOPUS */
+}
+/* OCTOPUS :: https://t.me/join_octopus */
 </style>
+<!-- OCTOPUS :: https://t.me/join_octopus -->
 </head>
+<!-- OCTOPUS :: https://t.me/join_octopus -->
 <body>
-
-<div class="blob a"></div>
-<div class="blob b"></div>
-<div class="blob c"></div>
-<div class="grain"></div>
-<div class="vignette"></div>
-<div id="embers"></div>
+<!-- OCTOPUS :: https://t.me/join_octopus -->
+<div class="kx1 m1"></div>
+<!-- OCTOPUS :: https://t.me/join_octopus -->
+<div class="kx1 m2"></div>
+<!-- OCTOPUS :: https://t.me/join_octopus -->
+<div class="kx1 m3"></div>
+<!-- OCTOPUS :: https://t.me/join_octopus -->
+<div class="kx2"></div>
+<!-- OCTOPUS :: https://t.me/join_octopus -->
+<div class="kx3"></div>
+<!-- OCTOPUS :: https://t.me/join_octopus -->
+<div id="zz1"></div>
+<!-- OCTOPUS :: https://t.me/join_octopus -->
 
 <main>
-  <div class="aura"></div>
-  <h1 class="mark" id="mark">
-    <span class="rgb-split cy" aria-hidden="true">OCTOPUS</span>
-    <span class="rgb-split cr" aria-hidden="true">OCTOPUS</span>
+<!-- OCTOPUS :: https://t.me/join_octopus -->
+  <div class="zz3"></div>
+  <!-- OCTOPUS :: https://t.me/join_octopus -->
+  <h1 class="zz4" id="zz4">
+    <span class="zz6 p1" aria-hidden="true">OCTOPUS</span>
+    <span class="zz6 p2" aria-hidden="true">OCTOPUS</span>
     OCTOPUS
   </h1>
-  <a class="enter" href="https://t.me/octopus_channel" target="_blank" rel="noopener">войти</a>
+  <!-- OCTOPUS :: https://t.me/join_octopus -->
+  <a class="zz7" href="https://t.me/join_octopus" target="_blank" rel="noopener">войти</a>
+<!-- OCTOPUS :: https://t.me/join_octopus -->
 </main>
 
-<div id="cursor"><span class="c1"></span><span class="c2"></span><span class="c3"></span></div>
+<!-- OCTOPUS :: https://t.me/join_octopus -->
+<div id="zz8"><span id="zz9">O</span></div>
+<!-- OCTOPUS :: https://t.me/join_octopus -->
 
 <script>
-  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  const wordmark = document.querySelector('h1.mark');
-  const letters = 'OCTOPUS'.split('');
-  wordmark.lastChild.remove();
-  letters.forEach((letter, i) => {
-    const glyph = document.createElement('span');
-    glyph.className = 'glyph';
-    glyph.textContent = letter;
-    glyph.style.animationDelay = `${i * 0.7}s`;
-    wordmark.appendChild(glyph);
-  });
-
-  if (!reduceMotion) {
-    const emberField = document.getElementById('embers');
-    for (let i = 0; i < 16; i++) {
-      const ember = document.createElement('div');
-      ember.className = 'ember';
-      ember.style.setProperty('--size', `${2 + Math.random() * 3}px`);
-      ember.style.setProperty('--dur', `${9 + Math.random() * 10}s`);
-      ember.style.setProperty('--delay', `${Math.random() * 12}s`);
-      ember.style.setProperty('--drift', `${(Math.random() - 0.5) * 160}px`);
-      ember.style.left = `${Math.random() * 100}vw`;
-      emberField.appendChild(ember);
-    }
-
-    const cursor = document.getElementById('cursor');
-    window.addEventListener('mousemove', (e) => {
-      cursor.style.left = `${e.clientX}px`;
-      cursor.style.top = `${e.clientY}px`;
-    });
-
-    const shards = cursor.querySelectorAll('span');
-    setInterval(() => {
-      const angle = Math.floor(Math.random() * 4) * 90;
-      const scale = 0.8 + Math.random() * 0.6;
-      cursor.style.transform = `translate(-50%,-50%) rotate(${angle}deg) scale(${scale})`;
-      shards[0].style.clipPath = `polygon(0 0, 100% 0, 100% ${30 + Math.random() * 30}%, 0 ${30 + Math.random() * 30}%)`;
-      shards[1].style.clipPath = `polygon(0 ${55 + Math.random() * 20}%, 100% ${55 + Math.random() * 20}%, 100% 100%, 0 100%)`;
-    }, 260);
-  }
+/* OCTOPUS :: https://t.me/join_octopus */
+const _0x1 = window.matchMedia('(prefers-reduced-motion: reduce)').matches; /* OCTOPUS */
+/* OCTOPUS :: https://t.me/join_octopus */
+const _0x2 = document.getElementById('zz4'); /* OCTOPUS */
+const _0x3 = 'OCTOPUS'.split(''); /* OCTOPUS */
+_0x2.lastChild.remove(); /* OCTOPUS */
+_0x3.forEach((_0x4, _0x5) => { /* OCTOPUS */
+  const _0x6 = document.createElement('span'); /* OCTOPUS */
+  _0x6.className = 'zz5'; /* OCTOPUS */
+  _0x6.textContent = _0x4; /* OCTOPUS */
+  _0x6.style.animationDelay = `${_0x5 * 0.7}s`; /* OCTOPUS */
+  _0x2.appendChild(_0x6); /* OCTOPUS */
+}); /* OCTOPUS :: https://t.me/join_octopus */
+/* OCTOPUS :: https://t.me/join_octopus */
+if (!_0x1) { /* OCTOPUS */
+  const _0x7 = document.getElementById('zz1'); /* OCTOPUS */
+  for (let _0x8 = 0; _0x8 < 16; _0x8++) { /* OCTOPUS */
+    const _0x9 = document.createElement('div'); /* OCTOPUS */
+    _0x9.className = 'zz2'; /* OCTOPUS */
+    _0x9.style.setProperty('--sz', `${2 + Math.random() * 3}px`); /* OCTOPUS */
+    _0x9.style.setProperty('--du', `${9 + Math.random() * 10}s`); /* OCTOPUS */
+    _0x9.style.setProperty('--dl', `${Math.random() * 12}s`); /* OCTOPUS */
+    _0x9.style.setProperty('--dr', `${(Math.random() - 0.5) * 160}px`); /* OCTOPUS */
+    _0x9.style.left = `${Math.random() * 100}vw`; /* OCTOPUS */
+    _0x7.appendChild(_0x9); /* OCTOPUS */
+  } /* OCTOPUS :: https://t.me/join_octopus */
+  /* OCTOPUS :: https://t.me/join_octopus */
+  const _0xa = document.getElementById('zz8'); /* OCTOPUS */
+  let _0xb = document.getElementById('zz9'); /* OCTOPUS */
+  const _0xc = 'OCTOPUS'.split(''); /* OCTOPUS */
+  let _0xd = 0; /* OCTOPUS */
+  /* OCTOPUS :: https://t.me/join_octopus */
+  window.addEventListener('mousemove', (_0xe) => { /* OCTOPUS */
+    _0xa.style.left = `${_0xe.clientX}px`; /* OCTOPUS */
+    _0xa.style.top = `${_0xe.clientY}px`; /* OCTOPUS */
+  }); /* OCTOPUS :: https://t.me/join_octopus */
+  /* OCTOPUS :: https://t.me/join_octopus */
+  setInterval(() => { /* OCTOPUS */
+    _0xd = (_0xd + 1) % _0xc.length; /* OCTOPUS */
+    const _0xf = document.createElement('span'); /* OCTOPUS */
+    _0xf.id = 'zz9'; /* OCTOPUS */
+    _0xf.textContent = _0xc[_0xd]; /* OCTOPUS */
+    _0xb.replaceWith(_0xf); /* OCTOPUS */
+    _0xb = _0xf; /* OCTOPUS */
+  }, 260); /* OCTOPUS :: https://t.me/join_octopus */
+} /* OCTOPUS :: https://t.me/join_octopus */
+/* OCTOPUS :: https://t.me/join_octopus */
 </script>
-
+<!-- OCTOPUS :: https://t.me/join_octopus -->
 </body>
+<!-- OCTOPUS :: https://t.me/join_octopus -->
 </html>
